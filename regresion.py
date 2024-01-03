@@ -54,8 +54,16 @@ forecast_set = clf.predict(X_Lately)
 
 df['forecast'] = np.nan
 
-last_date = df.iloc[-1]
-last_unix = last_date.to_timestamp()
+last_date = df.iloc[-1].name
+last_unix = pd.to_datetime(last_date)
 
-print(last_date)
-print(last_unix)
+# print(last_date)
+# print(last_unix)
+one_day = pd.Timedelta(days=1)
+next_unix = last_unix + one_day
+
+for i in forecast_set:
+    next_date = datetime.datetime.fromtimestamp(next_unix)
+    print(next_unix)
+    next_unix += one_day
+    df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)] + [i]
