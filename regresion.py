@@ -1,10 +1,14 @@
 import pandas as pd
-import quandl
+import quandl, datetime
 import math
 import numpy as np
 from sklearn import preprocessing, svm
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
 
 df = pd.read_csv('WIKI_GOOGL.csv')
 df = df[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume']]
@@ -19,21 +23,39 @@ df.fillna(-99999, inplace=True)
 
 forecast_out = 10
 df['label'] = df[forecats_col].shift(-forecast_out)
-df.dropna(inplace=True)
+# df.dropna(inplace=True)
 
 X = np.array(df.drop(columns='label'))
-y = np.array(df['label'])
 
 X = preprocessing.scale(X)
+X_Lately = X[-forecast_out:]
+X = X[:-forecast_out]
 
-# print(len(X), len(y))
-# print(len(df))
+df.dropna(inplace=True)
+
+y = np.array(df['label'])
+
+# print(len(X))
+# print(len(X))
+# print(len(X_Lately))
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-clf = LinearRegression()
+clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
 acc = clf.score(X_test, y_test)
 
-print("Coefficients:", clf.coef_)
-print(acc)
+# print("Coefficients:", clf.coef_)
+# print(acc)
+
+forecast_set = clf.predict(X_Lately)
+
+# print(forecast_set)
+
+df['forecast'] = np.nan
+
+last_date = df.iloc[-1]
+last_unix = last_date.to_timestamp()
+
+print(last_date)
+print(last_unix)
