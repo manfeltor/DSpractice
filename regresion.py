@@ -41,15 +41,18 @@ y = np.array(df['label'])
 # print(len(X))
 # print(len(X_Lately))
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
-clf = LinearRegression(n_jobs=-1)
-clf.fit(X_train, y_train)
+# clf = LinearRegression(n_jobs=-1)
+# clf.fit(X_train, y_train)
 
-with open('linearpk.pickle', 'wb') as f:
-    pickle.dump(clf, f)
+open_pickle = open('linearpk.pickle', 'rb')
+clf = pickle.load(open_pickle)
 
-acc = clf.score(X_test, y_test)
+# with open('linearpk.pickle', 'wb') as f:
+#     pickle.dump(clf, f)
+
+# acc = clf.score(X_test, y_test)
 
 # print("Coefficients:", clf.coef_)
 # print(acc)
