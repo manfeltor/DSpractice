@@ -10,8 +10,9 @@ from matplotlib import style
 
 style.use('ggplot')
 
-df = pd.read_csv('WIKI_GOOGL.csv')
-df = df[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume']]
+df = pd.read_excel('gls.xlsx')
+df = df[['Adj. Open', 'Adj. High', 'Adj. Low', 'Adj. Close', 'Adj. Volume', 'Date']]
+df.set_index('Date', inplace=True)
 df['HL_PCT'] = ((df['Adj. High'] - df['Adj. Low'])/df['Adj. Low'])*100
 df['CHANGE_PCT'] = ((df['Adj. Close'] - df['Adj. Open'])/df['Adj. Open'])*100
 
@@ -55,15 +56,21 @@ forecast_set = clf.predict(X_Lately)
 df['forecast'] = np.nan
 
 last_date = df.iloc[-1].name
-last_unix = pd.to_datetime(last_date)
+# last_unix = pd.to_datetime(last_date)
+
+# print(type(last_date))
 
 # print(last_date)
 # print(last_unix)
 one_day = pd.Timedelta(days=1)
-next_unix = last_unix + one_day
+next_day = last_date + one_day
+# next_unix = last_unix + one_day
 
 for i in forecast_set:
-    next_date = datetime.datetime.fromtimestamp(next_unix)
-    print(next_unix)
-    next_unix += one_day
+    next_date = next_day
+    next_day += one_day
     df.loc[next_date] = [np.nan for _ in range(len(df.columns)-1)] + [i]
+
+df.plot(y=['Adj. Close', 'forecast'])
+
+plt.show()
