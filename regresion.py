@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
+import pickle
 
 style.use('ggplot')
 
@@ -44,6 +45,10 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 
 clf = LinearRegression(n_jobs=-1)
 clf.fit(X_train, y_train)
+
+with open('linearpk.pickle', 'wb') as f:
+    pickle.dump(clf, f)
+
 acc = clf.score(X_test, y_test)
 
 # print("Coefficients:", clf.coef_)
