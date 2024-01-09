@@ -8,6 +8,21 @@ from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from matplotlib import style
 import pickle
+import random
+
+# hm = how many data points // var = variance // step = x multiplicator // base = y=0 correction // correlation = slope
+def create_ds(hm, var, step, base=0, correlation=True):
+    val = step + base
+    ys = []
+
+    for i in range(hm):
+        y = val + random.randrange(-var, var)
+        ys.append(y)
+        val += step
+    
+    xs = [i for i in range(hm)]
+        
+    return np.array(xs, ys)
 
 style.use('ggplot')
 
