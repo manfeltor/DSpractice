@@ -11,18 +11,12 @@ import pickle
 import random
 
 # hm = how many data points // var = variance // step = x multiplicator // base = y=0 correction // correlation = slope
-def create_ds(hm, var, step, base=0, correlation=True):
-    val = step + base
-    ys = []
 
-    for i in range(hm):
-        y = val + random.randrange(-var, var)
-        ys.append(y)
-        val += step
+def generate_test_ds(hm, var, m, stepx, basex = 0, y_zero = 0):
     
-    xs = [i for i in range(hm)]
-        
-    return np.array(xs, ys)
+    xs = [(i * stepx) + basex for i in range(hm)]
+    ys = [(i*m) + y_zero + random.randrange(-var, var) for i in xs]
+    return np.array([xs, ys])
 
 style.use('ggplot')
 
@@ -96,4 +90,6 @@ for i in forecast_set:
 
 df.plot(y=['Adj. Close', 'forecast'])
 
-plt.show()
+# plt.show()
+
+print(clf)
