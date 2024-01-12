@@ -10,44 +10,27 @@ from matplotlib import style
 import pickle
 import random
 
-# hm = how many data points // var = variance // step = x multiplicator // base = y=0 correction // correlation = slope
-def create_ds(hm, var, step, base=0):
-    val = step + base
-    ys = []
-
-    for i in range(hm):
-        y = val + random.randrange(-var, var)
-        ys.append(y)
-        val += step
-
-    xs = [i for i in range(hm)]
-    return np.array([xs, ys])
-
-# xs, ys = create_ds(5, 1, 1)
-# plt.scatter(xs, ys)
-# plt.show()
-
-def create_ds(hm, var, step, base=0, correlation=True):
-    val = step + base
-    ys = []
-
-    for i in range(hm):
-        y = val + random.randrange(-var, var)
-        ys.append(y)
-        val += step
-    
-    xs = [i for i in range(hm)]
-        
-    return np.array(xs, ys)
-
-
 def generate_test_ds(hm, var, m, stepx, basex = 0, y_zero = 0):
     
     xs = [(i * stepx) + basex for i in range(hm)]
     ys = [(i*m) + y_zero + random.randrange(-var, var) for i in xs]
     return np.array([xs, ys])
 
-xs, ys = generate_test_ds(5, 1, 3, 2)
-plt.plot(xs, ys)
-print(xs, ys)
-plt.show()
+predict = 0.2
+
+xs, ys = generate_test_ds(100, 8, 2, 1)
+
+df = pd.DataFrame({'X': xs, 'Y': ys})
+df['label'] = df['Y'].shift(-int(len(df)*predict))
+df_pred = df[df.isna().any(axis=1)]
+df = df.dropna()
+
+x = np.array(df.drop(columns='label'))
+y = np.array(df['label'])
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
+
+clf = LinearRegression(n_jobs=-1)
+clf.fit(x_train, y_train)
+scr = clf.score(x_test, y_test)
+print(scr)
