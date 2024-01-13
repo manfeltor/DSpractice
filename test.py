@@ -18,14 +18,15 @@ def generate_test_ds(hm, var, m, stepx, basex = 0, y_zero = 0):
 
 predict = 0.2
 
-xs, ys = generate_test_ds(100, 8, 2, 1)
+xs, ys = generate_test_ds(100, 20, 2, 1)
 
 df = pd.DataFrame({'X': xs, 'Y': ys})
 df['label'] = df['Y'].shift(-int(len(df)*predict))
 df_pred = df[df.isna().any(axis=1)]
 df = df.dropna()
+print(df)
 
-x = np.array(df.drop(columns='label'))
+ x = np.array(df.drop(columns='label'))
 y = np.array(df['label'])
 
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2)
